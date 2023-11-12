@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-style: normal;
+  src: url("../public/fonts/Inter.ttf");
+  font-family: "Inter";
+}
+
+.dark {
+  background: #1f2937;
+  color: #ccd6f6;
+}
+
+.aside-link {
+  color: #ccd6f6;
+}
+
+.dark .separate {
+  background: #8892b0;
+}
+
+.ligth .separate {
+  background: #000;
+}
+
+.ligth {
+  background: #f5f5f5;
+  color: #black;
+}
+
+.dark h4 {
+  color: #8892b0;
+}
+
+.dark .logo .time {
+  color: #fff;
+}
+
+.ligth .logo {
+  color: #000;
+}
+
+.dark p {
+  color: #8892b0;
+}
+
+.dark .work {
+  background: #0c2242;
+}
+
+.dark .footer {
+  color: #fff;
+}
+
+.ligth .footer {
+  color: #000;
+}
+
+.ligth .work {
+  background: #f5f5f5;
+}
+
+.ligth h4 p {
+  color: #2d353c;
+}
+
+* {
+  list-style-type: none;
+  font-family: "Inter";
+}

@@ -1,0 +1,71 @@
+image: ubuntu:22.04
+
+stages:
+  - build
+  - test
+  - package
+
+check_dependencies:
+  tags:
+    - agdi
+  stage: build
+  script:
+    - yarn install
+
+do_build:
+  tags:
+    - agdi
+  stage: build
+  dependencies:
+    - "check_dependencies"
+  before_script:
+    - echo
+  script:
+    - yarn build
+
+do_code_analysis:
+  tags:
+    - agdi
+  stage: test
+  dependencies:
+    - "do_build"
+  before_script:
+    - echo
+  script:
+    -  yarn install && yarn lint
+  allow_failure: true
+  interruptible: true
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules/
+    policy: pull
+  artifacts:
+    reports:
+      codequality: gl-codequality.json
+
+do_test:
+  tags:
+    - agdi
+  stage: test
+  dependencies:
+    - "check_dependencies"
+  before_script:
+    - echo
+  script:
+    - echo
+
+do_package:
+  tags:
+    - agdi
+  stage: package
+  dependencies:
+    - "do_test"
+  before_script:
+    - docker login -u reader -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t registry.gitlab.com/agence.digital/projects/cnps/metabase:hospifrontend .
+    - docker push registry.gitlab.com/agence.digital/projects/cnps/metabase:hospifrontend
+
