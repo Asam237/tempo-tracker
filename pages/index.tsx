@@ -21,6 +21,7 @@ export default function Index() {
   const [icon, setIcon] = useState(false);
   const [name, setName] = useState("");
   const [degre, setDegre] = useState("");
+  const [desc, setDesc] = useState("");
   const [typeIco, setTypeIco] = useState(null);
   const getWeather = async () => {
     setLoading(true);
@@ -34,6 +35,7 @@ export default function Index() {
       setWeatherData(response.data);
       setDegre(response.data.main.temp);
       setName(response.data.name);
+      setDesc(response.data.weather[0].description);
       setTypeIco(response.data.weather[0].icon);
       setIcon(true);
     } catch (error) {
@@ -109,17 +111,21 @@ export default function Index() {
         {tempo == false && (
           <div className="flex flex-col w-screen h-screen text-gray-700 p-10 bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 ">
             <div>
-              <h1 className="text-lg xl:text-3xl font-bold text-gray-800 mb-6 flex justify-between items-center blug-800">
-                <span>Tempo Tracker Map</span>
+              <h1 className="font-bold text-gray-800 mb-6 flex justify-between items-center blug-800">
+                <span className="hidden xl:flex text-xl">
+                  Tempo Tracker Map
+                </span>
                 {icon && (
                   <div className={"overflow-hidden"}>
                     <div className="flex flex-row space-x-4 items-center justify-center">
-                      <span className="text-lg font-bold">{degre} °C</span>
-                      <span className="font-semibold mt-1 text-gray-500">
+                      <span className="text-xs md:text-lg font-bold">
+                        {degre} °C
+                      </span>
+                      <span className="text-xs md:text-lg font-semibold mt-1 text-gray-500">
                         {name}
                       </span>
                       <img
-                        className="h-auto w-20 object-cover"
+                        className="h-auto w-14 md:w-20 object-cover"
                         src={`http://openweathermap.org/img/w/${typeIco}.png`}
                         alt={`${typeIco} icon`}
                       />
@@ -132,7 +138,7 @@ export default function Index() {
                   </div>
                 )}
               </h1>
-              <Map lat={lat} long={long} />
+              <Map lat={lat} long={long} description={desc} city={city} />
             </div>
           </div>
         )}
