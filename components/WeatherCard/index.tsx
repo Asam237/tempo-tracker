@@ -17,8 +17,8 @@ const WeatherCard = ({ data }: any) => {
         />
       </div>
       <div className="p-8">
-        <p className="text-xl bg-blue-800 text-gray-600 flex justify-center items-center p-2 text-white rounded-md">
-          Weather: {data.weather[0].description}
+        <p className="text-xl bg-blue-800 text-gray-600 flex justify-center items-center p-2 text-white rounded-md px-4">
+          <span>Weather: {data.weather[0].description}</span>
         </p>
       </div>
     </>
