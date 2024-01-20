@@ -2,6 +2,9 @@
 
 Open Weather App
 <br/>
+<br />
+Weather application using the OpenWeatherMap API, allowing to visualize weather conditions with integrated mapping features.
+<br />
 
 ## Composition
 
