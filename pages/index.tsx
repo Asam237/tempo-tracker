@@ -3,7 +3,14 @@ import axios from "axios";
 import { useState } from "react";
 import WeatherCard from "../components/WeatherCard";
 import dynamic from "next/dynamic";
-import { FaEye, FaMapPin } from "react-icons/fa";
+import { FaEye, FaGithub } from "react-icons/fa";
+import Link from "next/link";
+import { Roboto } from "@next/font/google";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+});
 
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
@@ -46,20 +53,52 @@ export default function Index() {
   return (
     <>
       <NextSeo title={seo.title} description={seo.description} />
-      <main>
+      <div className={`${roboto.className} absolute top-0 left-0 z-50 w-full`}>
+        <header className="bg-slate-900 h-14">
+          <div className="container mx-auto h-full">
+            <div className="flex justify-between items-center h-full">
+              <h4
+                onClick={() => (weatherData ? setTempo(true) : null)}
+                className="text-white cursor-pointer hover:cursor-pointer text-2xl font-bold"
+              >
+                Tempo Tracker
+              </h4>
+              <div className="flex space-x-2 justify-center items-center">
+                {weatherData && !tempo && (
+                  <h4
+                    className="cursor-pointer mr-4 text-white bg-slate-900 border-2 rounded-full px-4 py-1.5 text-sm hover:bg-white hover:text-slate-900 hover:font-bold"
+                    onClick={() => setTempo(!tempo)}
+                  >
+                    Voir les details
+                  </h4>
+                )}
+                {weatherData && tempo && (
+                  <h4
+                    className="cursor-pointer mr-4 text-white bg-slate-900 border-2 rounded-full px-4 py-1.5 text-sm hover:bg-white hover:text-slate-900 hover:font-bold"
+                    onClick={() => setTempo(!tempo)}
+                  >
+                    Voir la carte
+                  </h4>
+                )}
+                <Link href={"https://github.com/Asam237/tempo-tracker"}>
+                  <FaGithub color="white" size={26} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </header>
+      </div>
+      <div
+        className={`bg-[url("../assets/imgs/weather.webp")] bg-no-repeat bg-cover h-screen w-screen z-0 left-0 top-0 absolute`}
+      />
+      <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
+      <main className="relative z-20 h-screen w-screen">
         {tempo && (
-          <div>
-            <div className="flex flex-col items-center justify-center w-screen min-h-screen text-gray-700 p-10 bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 ">
+          <div className="z-20">
+            <div className="flex flex-col items-center justify-center w-screen min-h-screen text-gray-700 p-10">
               <div className="w-full max-w-screen-sm bg-white p-10 rounded-xl ring-8 ring-white ring-opacity-40">
                 <h1 className="text-lg xl:text-3xl font-bold text-gray-800 mb-6 flex justify-between items-center">
-                  <span>Tempo Tracker</span>
-                  {icon && (
-                    <FaMapPin
-                      size={20}
-                      className="cursor-pointer mr-4"
-                      onClick={() => setTempo(!tempo)}
-                    />
-                  )}
+                  Chercher une ville
                 </h1>
                 <div className="flex items-center space-x-4 mb-4">
                   <div className="flex items-center space-x-2 w-full">
@@ -143,6 +182,12 @@ export default function Index() {
           </div>
         )}
       </main>
+      <footer className="bg-slate-900 h-14 absolute bottom-0 left-0 right-0 text-white flex justify-center items-center">
+        <p className="text-sm text-white">
+          © Abba Sali | Copyright {new Date().getFullYear()}. All rights
+          reserved.
+        </p>
+      </footer>
     </>
   );
 }

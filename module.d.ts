@@ -1,1 +1,1 @@
-declare module "chart.js";
+declare module 'next/font/google';

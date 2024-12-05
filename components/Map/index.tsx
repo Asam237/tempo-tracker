@@ -38,24 +38,24 @@ const Map = ({
 
   if (typeof window !== "undefined") {
     return (
-      <MapContainer
-        center={correctCoordinates}
-        zoom={7}
-        scrollWheelZoom={false}
-        className="overflow-hidden z-50"
-        style={{ height: 500, width: "100%" }}
-      >
-        <TileLayer
-          url={tileLayerUrl}
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      <>
+        <div
+          className={`bg-[url("../assets/imgs/weather.webp")] h-screen w-screen z-0 left-0 top-0 absolute`}
         />
-        {/* <Marker key={1} title="zone"  position={correctCoordinates}>
-          <Popup>
-            <b>{city}</b> <br />
-            {description}
-          </Popup>
-        </Marker> */}
-      </MapContainer>
+        <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
+        <MapContainer
+          center={correctCoordinates}
+          zoom={13}
+          scrollWheelZoom={false}
+          className="overflow-hidden z-50 rounded-md mx-auto"
+          style={{ height: "75vh", width: "75vw" }}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
+          />
+        </MapContainer>
+      </>
     );
   } else {
     return null;
