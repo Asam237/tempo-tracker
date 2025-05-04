@@ -44,3 +44,14 @@ Then run the app in production mode:
 ```sh
 npm start
 ```
+
+## Authors
+
+This project is maintained by:
+
+- Abba Sali Aboubakar Mamate ([@asam_237](https://twitter.com/asam_237))
+- my website: [https://abbasali.cm](https://abbasali.cm)
+- email: abbasaliaboubakar@gmail.com
+- mobile: (+237) 691846922
+
+<br/>
