@@ -50,7 +50,6 @@ npm start
 This project is maintained by :
 
 - Abba Sali Aboubakar Mamate ([@asam_237](https://twitter.com/asam_237))
-- my website: [https://abbasali.cm](https://abbasali.cm)
 - email: abbasaliaboubakar@gmail.com
 - mobile: (+237) 691 846 922
 
