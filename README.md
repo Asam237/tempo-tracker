@@ -11,6 +11,8 @@ Weather application using the OpenWeatherMap API, allowing to visualize weather 
 This starter kit is composed of:
 
 - [Next.js](https://nextjs.org/)
+- [Docker](https://www.docker.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
   <br/>
 
 ## Install dependecies
