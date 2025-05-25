@@ -8,7 +8,7 @@ const WeatherCard = ({ data }: any) => {
           <span className="text-lg xl:text-6xl font-bold">
             {data.main.temp} °C
           </span>
-          <span className="font-semibold mt-1 text-gray-500">{data.name}</span>
+          <span className="font-semibold mt-1 text-white">{data.name}</span>
         </div>
         <img
           className="h-auto w-14 md:w-20 object-cover"
