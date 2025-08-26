@@ -1,10 +1,12 @@
 import { NextSeo } from "next-seo";
-import axios from "axios";
 import { useState, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
-import { FaGithub, FaMapMarkerAlt } from "react-icons/fa";
+import { FaGithub, FaMapMarkerAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Link from "next/link";
 import { Roboto } from "@next/font/google";
+import { getCurrentWeather, getWeatherForecast, getTouristAttractions } from "../utils/weatherApi";
+import WeatherForecast from "../components/WeatherForecast";
+import TouristAttractions from "../components/TouristAttractions";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -22,8 +24,11 @@ export default function Index() {
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [weatherData, setWeatherData]: any = useState(null);
+  const [forecastData, setForecastData]: any = useState(null);
+  const [attractions, setAttractions]: any = useState([]);
   const [error, setError] = useState("");
   const [showMap, setShowMap] = useState(false);
+  const [activeTab, setActiveTab] = useState("weather");
 
   const weatherInfo = useMemo(() => {
     if (!weatherData) return null;
@@ -54,12 +59,18 @@ export default function Index() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=5e9699131a1fa6d7a82f824d8a6e8c7f&units=metric`
-      );
-      setWeatherData(response.data);
-    } catch {
-      setError("City not found");
+      const weather = await getCurrentWeather(city);
+      setWeatherData(weather);
+      
+      // Récupérer les prévisions
+      const forecast = await getWeatherForecast(weather.coord.lat, weather.coord.lon);
+      setForecastData(forecast);
+      
+      // Récupérer les sites touristiques
+      const touristSpots = await getTouristAttractions(weather.coord.lat, weather.coord.lon, weather.name);
+      setAttractions(touristSpots);
+    } catch (err: any) {
+      setError(err.message || "Ville non trouvée");
     } finally {
       setLoading(false);
     }
@@ -75,8 +86,11 @@ export default function Index() {
   const reset = () => {
     setShowMap(false);
     setWeatherData(null);
+    setForecastData(null);
+    setAttractions([]);
     setCity("");
     setError("");
+    setActiveTab("weather");
   };
 
   const getWeatherGradient = () => {
@@ -189,8 +203,9 @@ export default function Index() {
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center space-y-8">
-                    <div className="space-y-6">
+                  <div className="w-full max-w-6xl mx-auto">
+                    {/* En-tête avec informations météo principales */}
+                    <div className="text-center space-y-6 mb-8">
                       <div className="text-5xl sm:text-6xl mb-4">
                         {getWeatherEmoji()}
                       </div>
@@ -206,48 +221,125 @@ export default function Index() {
                         </p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    {/* Informations météo détaillées */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
                       {[
                         {
-                          label: "Feels like",
+                          label: "Ressenti",
                           value: `${weatherInfo?.feelsLike}°`,
                         },
                         {
-                          label: "Humidity",
+                          label: "Humidité",
                           value: `${weatherInfo?.humidity}%`,
                         },
                         {
-                          label: "Wind",
+                          label: "Vent",
                           value: `${weatherInfo?.windSpeed} km/h`,
                         },
-                        { label: "Sunrise", value: weatherInfo?.sunrise },
+                        { label: "Lever du soleil", value: weatherInfo?.sunrise },
                       ].map((item) => (
                         <div
                           key={item.label}
-                          className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20"
+                          className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20 hover:bg-white/15 transition-all"
                         >
-                          <p className="text-white/60 text-sm font-light mb-1">
+                          <p className="text-white/60 text-xs font-light mb-1">
                             {item.label}
                           </p>
-                          <p className="text-white text-xl font-light">
+                          <p className="text-white text-lg font-light">
                             {item.value}
                           </p>
                         </div>
                       ))}
                     </div>
-                    <div className="space-y-3 pt-4">
+
+                    {/* Navigation par onglets */}
+                    <div className="flex justify-center mb-6">
+                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-1 border border-white/20">
+                        <div className="flex space-x-1">
+                          {[
+                            { id: "weather", label: "Météo", icon: "🌤️" },
+                            { id: "forecast", label: "Prévisions", icon: "📅" },
+                            { id: "attractions", label: "Tourisme", icon: "🏛️" },
+                          ].map((tab) => (
+                            <button
+                              key={tab.id}
+                              onClick={() => setActiveTab(tab.id)}
+                              className={`px-4 py-2 rounded-xl text-sm font-light transition-all flex items-center space-x-2 ${
+                                activeTab === tab.id
+                                  ? "bg-white/20 text-white"
+                                  : "text-white/70 hover:text-white hover:bg-white/10"
+                              }`}
+                            >
+                              <span>{tab.icon}</span>
+                              <span>{tab.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Contenu des onglets */}
+                    <div className="mb-8">
+                      {activeTab === "weather" && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                            <h3 className="text-white text-xl font-light mb-4">Détails météo</h3>
+                            <div className="space-y-4">
+                              <div className="flex justify-between items-center">
+                                <span className="text-white/70">Coucher du soleil</span>
+                                <span className="text-white">{weatherInfo?.sunset}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-white/70">Visibilité</span>
+                                <span className="text-white">Bonne</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-white/70">Pression</span>
+                                <span className="text-white">1013 hPa</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                            <h3 className="text-white text-xl font-light mb-4">Conseils</h3>
+                            <div className="space-y-3">
+                              <p className="text-white/80 text-sm">
+                                🌡️ Température agréable pour les activités extérieures
+                              </p>
+                              <p className="text-white/80 text-sm">
+                                💧 Humidité modérée, pensez à vous hydrater
+                              </p>
+                              <p className="text-white/80 text-sm">
+                                🌬️ Vent léger, idéal pour une promenade
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {activeTab === "forecast" && forecastData && (
+                        <WeatherForecast forecast={forecastData} />
+                      )}
+                      
+                      {activeTab === "attractions" && (
+                        <TouristAttractions attractions={attractions} cityName={weatherInfo?.name || ""} />
+                      )}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
                       <button
                         onClick={() => setShowMap(true)}
-                        className="w-full bg-white/15 hover:bg-white/25 text-white py-4 rounded-2xl transition-all backdrop-blur-sm flex items-center justify-center space-x-2 border border-white/20 hover:border-white/30"
+                        className="bg-white/15 hover:bg-white/25 text-white py-3 px-6 rounded-2xl transition-all backdrop-blur-sm flex items-center justify-center space-x-2 border border-white/20 hover:border-white/30"
                       >
-                        <FaMapMarkerAlt className="text-base sm:text-sm" />
-                        <span className="font-light">View on Map</span>
+                        <FaMapMarkerAlt className="text-sm" />
+                        <span className="font-light">Voir sur la carte</span>
                       </button>
                       <button
                         onClick={reset}
-                        className="w-full text-white/70 hover:text-white py-3 transition-all font-light"
+                        className="text-white/70 hover:text-white py-3 px-6 transition-all font-light"
                       >
-                        Search another city
+                        Rechercher une autre ville
                       </button>
                     </div>
                   </div>
@@ -275,7 +367,8 @@ export default function Index() {
                         onClick={() => setShowMap(false)}
                         className="text-white/70 hover:text-white transition-colors font-light text-sm sm:text-lg"
                       >
-                        ← Back
+                        <FaChevronLeft className="text-xs" />
+                        <span>Retour</span>
                       </button>
                     </div>
                   </div>
@@ -293,17 +386,17 @@ export default function Index() {
           </main>
 
           <footer className="p-4 sm:p-6 text-center">
-            <p className="text-white text-xs sm:text-sm font-light leading-6 lg:leading-[24px]">
-              Made with ❤️ for weather lovers
+            <p className="text-white/60 text-xs sm:text-sm font-light leading-6 lg:leading-[24px]">
+              Fait avec ❤️ pour les amoureux de la météo
               <br />
               {new Date().getFullYear()}{" "}
               <a
-                className="underline underline-offset-4 transition-transform duration-300 hover:scale-110"
+                className="text-white/80 hover:text-white underline underline-offset-4 transition-all duration-300"
                 href="https://abbasali.cm"
               >
                 Abba Sali{" "}
               </a>
-              All rights reserved.
+              Tous droits réservés.
             </p>
           </footer>
         </div>
