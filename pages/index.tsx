@@ -18,6 +18,7 @@ import { Roboto } from "@next/font/google";
 import { getCurrentWeather, getWeatherForecast, getTouristAttractions } from "../utils/weatherApi";
 import WeatherForecast from "../components/WeatherForecast";
 import TouristAttractions from "../components/TouristAttractions";
+import React from "react";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ const roboto = Roboto({
 
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
-export default function Index() {
+const Home: React.FC = () => {
   const seo = {
     title: "Tempo - Beautiful Weather",
     description: "Simple, beautiful weather at your fingertips.",
@@ -555,4 +556,3 @@ export default function Index() {
       </div>
     </>
   );
-}
