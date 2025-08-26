@@ -1,20 +1,20 @@
 import { NextSeo } from "next-seo";
 import { useState, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
-import { FaGithub, FaMapMarkerAlt, FaChevronLeft, FaSearch } from "react-icons/fa";
+import { FaGithub, FaMapMarkerAlt, FaChevronLeft, FaSearch, FaThermometerHalf } from "react-icons/fa";
 import { 
   CloudIcon, 
   SunIcon, 
   CloudRainIcon, 
   EyeIcon,
   WindIcon,
-  DropletIcon,
-  ThermometerIcon,
-  SunriseIcon,
-  SunsetIcon
+  BeakerIcon as DropletIcon,
+  FireIcon as ThermometerIcon,
+  SunIcon as SunriseIcon,
+  MoonIcon as SunsetIcon
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { Roboto } from "@next/font/google";
+import { Roboto } from "next/font/google";
 import { getCurrentWeather, getWeatherForecast, getTouristAttractions } from "../utils/weatherApi";
 import WeatherForecast from "../components/WeatherForecast";
 import TouristAttractions from "../components/TouristAttractions";
@@ -331,7 +331,7 @@ const Home: React.FC = () => {
                         {
                           label: "Ressenti",
                           value: `${weatherInfo?.feelsLike}°`,
-                          icon: <ThermometerIcon className="w-6 h-6" />,
+                          icon: <FaThermometerHalf className="w-6 h-6" />,
                           color: "text-orange-400"
                         },
                         {
@@ -376,14 +376,14 @@ const Home: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="bg-gradient-to-r from-orange-500/20 to-yellow-500/20 backdrop-blur-md rounded-2xl p-6 border border-orange-400/30">
                         <div className="flex items-center space-x-3 mb-2">
-                          <SunriseIcon className="w-6 h-6 text-orange-400" />
+                          <SunIcon className="w-6 h-6 text-orange-400" />
                           <p className="text-white/80 text-sm font-light">Lever du soleil</p>
                         </div>
                         <p className="text-white text-2xl font-light">{weatherInfo?.sunrise}</p>
                       </div>
                       <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-md rounded-2xl p-6 border border-purple-400/30">
                         <div className="flex items-center space-x-3 mb-2">
-                          <SunsetIcon className="w-6 h-6 text-purple-400" />
+                          <CloudIcon className="w-6 h-6 text-purple-400" />
                           <p className="text-white/80 text-sm font-light">Coucher du soleil</p>
                         </div>
                         <p className="text-white text-2xl font-light">{weatherInfo?.sunset}</p>
