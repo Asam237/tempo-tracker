@@ -1,5 +1,14 @@
 import React from "react";
-import { CloudIcon, SunIcon, CloudRainIcon, EyeIcon } from "@heroicons/react/24/outline";
+import {
+  WiDaySunny,
+  WiNightClear,
+  WiCloud,
+  WiCloudy,
+  WiRain,
+  WiThunderstorm,
+  WiSnow,
+  WiFog,
+} from "react-icons/wi";
 
 interface ForecastDay {
   date: string;
@@ -15,23 +24,31 @@ interface WeatherForecastProps {
 
 const WeatherForecast: React.FC<WeatherForecastProps> = ({ forecast }) => {
   const getWeatherIcon = (iconCode: string) => {
-    const iconClass = "w-10 h-10";
-    
+    const iconClass = "w-12 h-12";
+
     if (iconCode.includes("01")) {
-      const isDay = iconCode.includes("d");
-      return <SunIcon className={`${iconClass} ${isDay ? 'text-yellow-400' : 'text-blue-300'}`} />;
+      return iconCode.includes("d") ? (
+        <WiDaySunny className={`${iconClass} text-yellow-400`} />
+      ) : (
+        <WiNightClear className={`${iconClass} text-blue-300`} />
+      );
     }
-    if (iconCode.includes("02") || iconCode.includes("03") || iconCode.includes("04")) 
-      return <CloudIcon className={`${iconClass} text-gray-300`} />;
-    if (iconCode.includes("09") || iconCode.includes("10")) 
-      return <CloudRainIcon className={`${iconClass} text-blue-400`} />;
-    if (iconCode.includes("11")) 
-      return <CloudRainIcon className={`${iconClass} text-purple-400`} />;
-    if (iconCode.includes("13")) 
-      return <CloudIcon className={`${iconClass} text-blue-200`} />;
-    if (iconCode.includes("50")) 
-      return <EyeIcon className={`${iconClass} text-gray-400`} />;
-    return <SunIcon className={`${iconClass} text-yellow-400`} />;
+    if (
+      iconCode.includes("02") ||
+      iconCode.includes("03") ||
+      iconCode.includes("04")
+    )
+      return <WiCloudy className={`${iconClass} text-gray-300`} />;
+    if (iconCode.includes("09") || iconCode.includes("10"))
+      return <WiRain className={`${iconClass} text-blue-400`} />;
+    if (iconCode.includes("11"))
+      return <WiThunderstorm className={`${iconClass} text-purple-400`} />;
+    if (iconCode.includes("13"))
+      return <WiSnow className={`${iconClass} text-blue-200`} />;
+    if (iconCode.includes("50"))
+      return <WiFog className={`${iconClass} text-gray-400`} />;
+
+    return <WiDaySunny className={`${iconClass} text-yellow-400`} />;
   };
 
   const formatDate = (dateString: string) => {
@@ -39,16 +56,16 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ forecast }) => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     if (date.toDateString() === today.toDateString()) {
       return "Aujourd'hui";
     } else if (date.toDateString() === tomorrow.toDateString()) {
       return "Demain";
     } else {
-      return date.toLocaleDateString('fr-FR', { 
-        weekday: 'long', 
-        day: 'numeric',
-        month: 'short'
+      return date.toLocaleDateString("fr-FR", {
+        weekday: "long",
+        day: "numeric",
+        month: "short",
       });
     }
   };
@@ -66,12 +83,12 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ forecast }) => {
         <span className="mr-3 text-3xl">📅</span>
         Prévisions sur 3 jours
       </h3>
-      
+
       <div className="space-y-4">
         {forecast.length > 0 ? (
           forecast.map((day, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="group hover:bg-white/15 transition-all duration-300 p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-white/20 hover:scale-[1.02] transform"
             >
               <div className="flex items-center justify-between">
@@ -88,10 +105,14 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ forecast }) => {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="text-right space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className={`text-2xl font-light ${getTemperatureColor(day.temp_max)}`}>
+                    <span
+                      className={`text-2xl font-light ${getTemperatureColor(
+                        day.temp_max
+                      )}`}
+                    >
                       {Math.round(day.temp_max)}°
                     </span>
                     <span className="text-white/50 text-lg font-light">
@@ -100,10 +121,13 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ forecast }) => {
                   </div>
                   <div className="flex items-center justify-end space-x-1">
                     <div className="w-16 h-1 bg-white/20 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-gradient-to-r from-blue-400 to-red-400 rounded-full transition-all duration-500"
-                        style={{ 
-                          width: `${Math.min(100, Math.max(0, ((day.temp_max + 10) / 50) * 100))}%` 
+                        style={{
+                          width: `${Math.min(
+                            100,
+                            Math.max(0, ((day.temp_max + 10) / 50) * 100)
+                          )}%`,
                         }}
                       ></div>
                     </div>
@@ -121,7 +145,7 @@ const WeatherForecast: React.FC<WeatherForecastProps> = ({ forecast }) => {
           </div>
         )}
       </div>
-      
+
       {forecast.length > 0 && (
         <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/10">
           <p className="text-white/60 text-sm font-light text-center">
