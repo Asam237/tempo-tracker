@@ -628,7 +628,7 @@ const Home: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Abba Sali Aboubakar Mamate
+                Abba Sali
               </a>
             </p>
           </div>
