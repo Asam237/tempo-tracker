@@ -12,6 +12,7 @@
     "lintfix": "prettier --write --list-different . && yarn lint:ts --fix"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@next/font": "13.1.1",
     "@tanstack/react-query": "^4.32.6",
     "@types/jsonwebtoken": "^9.0.2",
