@@ -23,13 +23,12 @@ export default function Meteo() {
     }
   };
 
-  // 🔹 Envoyer les données météo à n8n pour analyse
   const handleAnalyse = async () => {
     if (!weather) return alert("Charge d'abord la météo !");
 
     try {
       const response = await fetch(
-        "https://n8n.abbasali.cm/webhook-test/meteo",
+        "https://n8n.abbasali.cm/webhook-test/weather",
         {
           method: "POST",
           headers: {
